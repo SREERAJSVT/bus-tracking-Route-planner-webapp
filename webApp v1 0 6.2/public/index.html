@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>gpsBus</title>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCitmh5SKkJ3wqhr76ePvFEI1Spql0Uuak&libraries=places" defer></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
+<!-- update the version number as needed -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+
+    <!-- include only the Firebase features as you need -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+    <script>
+     // REPLACE WITH YOUR web app's Firebase configuration
+     const firebaseConfig = {
+          apiKey: " AIzaSyA9ZCvMBj-OVTaYhcZlb9uX3Y-xgilZ_r0 ",
+          authDomain: "gpsbustrackercollage.firebaseapp.com",
+          databseURL: "gpsbustrackercollage-default-rtdb.firebaseio.com",
+          projectId: "gpsbustrackercollage",
+          storageBucket: "gpsbustrackercollage.appspot.com",
+          messagingSenderId: "1033915878394",
+          appId: "1:1033915878394:web:56f6a887e7c87e20237243"
+        };
+
+      // Initialize firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Make auth and database references
+      const auth = firebase.auth();
+      const db = firebase.database();
+
+    </script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="App.css">
+    
+</head>
+<body>
+    
+  <!--TOP BAR-->
+  <div class="topnav">
+    <h1>Bus tracking   App </h1>
+  </div>
+
+  <!--AUTHENTICATION BAR (USER DETAILS/LOGOUT BUTTON)-->
+  <div id="authentication-bar" style="display: none;">
+    <p><span id="authentication-status">User logged in</span>
+       <span id="user-details">USEREMAIL</span>
+       <a href="/" id="logout-link">(logout)</a>
+    </p>
+  </div>
+
+  <!--LOGIN FORM-->
+  <form id="login-form" style="display: none;">
+    <div class="form-elements-container">
+      <label for="input-email"><b>Email</b></label>
+      <input type="text" placeholder="Enter Username" id="input-email" required>
+
+      <label for="input-password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" id="input-password" required>
+
+      <button type="submit" id="login-button">Login</button>
+      <p id="error-message" style="color:red;"></p>
+    </div>
+  </form>
+
+  <!--CONTENT (SENSOR READINGS)-->
+  <div class="content-sign-in" id="content-sign-in" style="display: none;">
+ 
+
+
+  
+<!-- map division-->
+<div class="jumbotron">
+    <div class="container-fluid" aria-label="Map">
+        <h1>FIND YOUR BUS</h1>
+        <p>This App Will Help You Calculate Your Travelling Distances. Arraiwel Time Speed SoS Emergency Alert...!</p>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label for="from" class="col-xs-2 control-label"><i class="far fa-dot-circle"></i></label>
+                <div class="col-xs-4">
+                    <input type="text" id="from" placeholder="Origin" class="form-control">
+                </div>
+           </div>
+           <div class="form-group">
+            
+                <label for="to" class="col-xs-2 control-label"><i class="fas fa-map-marker-alt"></i></label>
+                <div class="col-xs-4">
+                    <input type="text" id="to" placeholder="Destination" class="form-control">
+                </div>
+              
+             </div>
+             
+        </form>
+<div class="col-xs-offset-2 col-xs-10">
+        <button class="button" onclick="calcRoute();"><i class="fas fa-map-signs">      FindRoute        </i></button>
+        </div></div>
+    <div class="container-fluid">
+        <div id="googleMap"> </div>
+        <div id="output">
+        </div>
+        <div id =mapdirectlink></div>
+      </div>
+</div>
+<!-- map division-->
+<script src="auth.js"defer ></script>
+<script src="Main.js"defer></script>
+<div class="cards">
+  <div class="card">
+    <P> BUS RAW DATA DETAILS:<b>BUS NO087</b></P><br>
+    Localtime:<p id="time"> </p><p id="date"> </p>
+    <!--lat--> <p class ="reading"id="currentTime"></p>
+    <br>
+    <p><i class="fas fa-map-marker-alt" style="color:#f70606e1;"></i> LNG:</p>
+    <p><span class="reading"><span id="lngvalue"></span></span></p>
+    <!--lng-->
+    <p><i class="fas fa-map-marker-alt" style="color:#d60000;"></i> LAT:</p>
+    <p><span class="reading"><span id="latvalue"></span></span></p>
+    <!--speed-->
+    <p><i class="fas fa-angle-double-down" style="color:#0351fa;"></i> SPEED</p>
+    <p><span class="reading"><span id="speedvalue"></span> KM/h</span></p>
+
+    <!-- soshttps://maps.google.com/?q=<lat>,<lng>-->
+    <p><i class="fas fa-angle-double-down" style="color:#1101f7;"></i>Admin SOS Check</p>
+    <p><span class="reading"><span id="sosvalue"></span><a href="nextpage/base.html" id="soslocation">(bus last location)</a> </span></p>
+    <p>
+    </p>
+    
+    <script>
+      function displayTime() {
+        var date = new Date();
+        var time = date.toLocaleTimeString();
+        document.getElementById("time").innerHTML = time;
+        document.getElementById("date").innerHTML= date;
+      }
+      
+      setInterval(displayTime, 1000);
+      </script>
+      
+    </div>
+</body>
+</html>

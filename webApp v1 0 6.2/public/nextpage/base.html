@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Tracking</title>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body>
+  <div class="top-bar"><span class="tracker">Live Tracking</span><div><br> <br><p id="time"> </p></div></div>
+  <div id="map" class="map"></div>
+  <br>
+  
+<!--
+  <script defer src="/__/firebase/7.13.2/firebase-app.js"></script>
+  <script defer src="/__/firebase/7.13.2/firebase-database.js"></script>
+  <script defer src="/__/firebase/init.js"></script>-->
+
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-app.js"></script>
+
+  <!-- include only the Firebase features as you need -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.1/firebase-database.js"></script>
+
+  <script defer src="index.js"></script>
+  <!-- Change out the following API_KEY for your Maps API Key -->
+  <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCitmh5SKkJ3wqhr76ePvFEI1Spql0Uuak&callback=initMap"></script>
+ 
+
+  <script>
+    function displayTime() {
+      var date = new Date();
+      var time = date.toLocaleTimeString();
+      document.getElementById("time").innerHTML = time;
+    }
+    
+    setInterval(displayTime, 1000);
+    </script>
+  <script>
+    // REPLACE WITH YOUR web app's Firebase configuration
+    const firebaseConfig = {
+         apiKey: " AIzaSyA9ZCvMBj-OVTaYhcZlb9uX3Y-xgilZ_r0 ",
+         authDomain: "gpsbustrackercollage.firebaseapp.com",
+         databseURL: "gpsbustrackercollage-default-rtdb.firebaseio.com",
+         projectId: "gpsbustrackercollage",
+         storageBucket: "gpsbustrackercollage.appspot.com",
+         messagingSenderId: "1033915878394",
+         appId: "1:1033915878394:web:56f6a887e7c87e20237243"
+       };
+
+     // Initialize firebase
+     firebase.initializeApp(firebaseConfig);
+
+     // Make auth and database references
+     const auth = firebase.auth();
+     const db = firebase.database();
+
+   </script>  
+    <div id =mapdirectlink></div>
+</body>
+
+</html>
